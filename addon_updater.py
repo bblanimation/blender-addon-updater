@@ -1095,7 +1095,7 @@ class SingletonUpdater(object):
 	# called for running check in a background thread
 	def check_for_update_async(self, callback=None):
 
-		if self._json is not None and "update_ready" in self._json and len(self._json["version_text"] > 0:
+		if self._json is not None and "update_ready" in self._json and len(self._json["version_text"]) > 0:
 			if self._json["update_ready"]:
 				self._update_ready = True
 				self._update_link = self._json["version_text"]["link"]

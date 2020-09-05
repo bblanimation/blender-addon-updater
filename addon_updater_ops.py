@@ -214,7 +214,7 @@ class addon_updater_check_now(bpy.types.Operator):
 	bl_description = "Check now for an update to the {} addon".format(updater.addon)
 	bl_options = {"REGISTER", "INTERNAL"}
 
-	def execute(self,context):
+	def execute(self, context):
 		if updater.invalidupdater:
 			return {"CANCELLED"}
 
@@ -726,7 +726,7 @@ def check_for_update_background():
 		return
 
 	# apply the UI settings
-	apply_ui_settings(context)
+	apply_ui_settings(bpy.context)
 
 	# input is an optional callback function
 	# this function should take a bool input, if true: update ready
@@ -857,9 +857,9 @@ def update_settings_ui(self, context, element=None, condensed=False):
 		return
 
 	# auto-update settings
-    if not condensed:
-    	box.label(text="Updater Settings")
-    	row = box.row()
+	if not condensed:
+		box.label(text="Updater Settings")
+		row = box.row()
 
 	# special case to tell user to restart blender, if set that way
 	if not updater.auto_reload_post_update:
@@ -868,27 +868,27 @@ def update_settings_ui(self, context, element=None, condensed=False):
 			row.label(text="Restart blender to complete update", icon="ERROR")
 			return
 
-    if not condensed:
-    	split = layout_split(row, factor=0.3)
-    	subcol = split.column()
-    	subcol.prop(settings, "auto_check_update")
-    	subcol = split.column()
+	if not condensed:
+		split = layout_split(row, factor=0.3)
+		subcol = split.column()
+		subcol.prop(settings, "auto_check_update")
+		subcol = split.column()
 
-    	if not settings.auto_check_update:
-    		subcol.enabled = False
-    	subrow = subcol.row()
-    	subrow.label(text="Interval between checks")
-    	subrow = subcol.row(align=True)
-    	checkcol = subrow.column(align=True)
-    	checkcol.prop(settings,"updater_intrval_months")
-    	checkcol = subrow.column(align=True)
-    	checkcol.prop(settings,"updater_intrval_days")
-    	checkcol = subrow.column(align=True)
-    	checkcol.prop(settings,"updater_intrval_hours")
-    	checkcol = subrow.column(align=True)
-    	checkcol.prop(settings,"updater_intrval_minutes")
+		if not settings.auto_check_update:
+			subcol.enabled = False
+		subrow = subcol.row()
+		subrow.label(text="Interval between checks")
+		subrow = subcol.row(align=True)
+		checkcol = subrow.column(align=True)
+		checkcol.prop(settings,"updater_intrval_months")
+		checkcol = subrow.column(align=True)
+		checkcol.prop(settings,"updater_intrval_days")
+		checkcol = subrow.column(align=True)
+		checkcol.prop(settings,"updater_intrval_hours")
+		checkcol = subrow.column(align=True)
+		checkcol.prop(settings,"updater_intrval_minutes")
 
-    	row = box.row()
+		row = box.row()
 
 	# checking / managing updates
 	col = row.column()
@@ -956,9 +956,9 @@ def update_settings_ui(self, context, element=None, condensed=False):
 		split.scale_y = 2
 		split.operator(addon_updater_check_now.bl_idname, text="", icon="FILE_REFRESH")
 
-    if condensed:
-    	row = element.row()
-    	row.prop(settings, "auto_check_update")
+	if condensed:
+		row = element.row()
+		row.prop(settings, "auto_check_update")
 	elif not updater.manual_only:
 		col = row.column(align=True)
 		#col.operator(addon_updater_update_target.bl_idname,
