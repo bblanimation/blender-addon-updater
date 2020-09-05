@@ -56,7 +56,7 @@ DEFAULT_PER_PAGE = 30
 # The main class
 # -----------------------------------------------------------------------------
 
-class Singleton_updater(object):
+class SingletonUpdater(object):
 	"""
 	This is the singleton class to reference a copy from,
 	it is the shared module level class
@@ -75,7 +75,7 @@ class Singleton_updater(object):
 		self._latest_release = None
 		self._use_releases = False
 		self._include_branches = False
-		self._include_branch_list = ['master', 'demo']
+		self._include_branch_list = ["master", "demo"]
 		self._include_branch_autocheck = False
 		self._manual_only = False
 		self._version_min_update = None
@@ -190,7 +190,7 @@ class Singleton_updater(object):
 		if value is None:
 			self._backup_ignore_patterns = None
 			return
-		elif type(value) != type(['list']):
+		elif not isinstance(value, list):
 			raise ValueError("Backup pattern must be in list format")
 		else:
 			self._backup_ignore_patterns = value
@@ -252,7 +252,7 @@ class Singleton_updater(object):
 		return self._fake_install
 	@fake_install.setter
 	def fake_install(self, value):
-		if type(value) != type(False):
+		if not isinstance(value, bool):
 			raise ValueError("fake_install must be a boolean value")
 		self._fake_install = bool(value)
 
@@ -274,7 +274,7 @@ class Singleton_updater(object):
 	def include_branch_list(self, value):
 		try:
 			if value == None:
-				self._include_branch_list = ['master', 'demo']
+				self._include_branch_list = ["master", "demo"]
 			elif not isinstance(value, list) or len(value) == 0:
 				raise ValueError("include_branch_list should be a list of valid branches")
 			else:
@@ -611,12 +611,12 @@ class Singleton_updater(object):
 		else:
 			if not self._include_branches:
 				self._tag_latest = self._tags[0]
-				if self._verbose: print("Most recent tag found:", self._tags[0]['name'])
+				if self._verbose: print("Most recent tag found:", self._tags[0]["name"])
 			else:
 				# don't return branch if in list
 				n = len(self._include_branch_list)
 				self._tag_latest = self._tags[n]  # guaranteed at least len()=n+1
-				if self._verbose: print("Most recent tag found:", self._tags[n]['name'])
+				if self._verbose: print("Most recent tag found:", self._tags[n]["name"])
 
 
 	# all API calls to base url
@@ -633,7 +633,7 @@ class Singleton_updater(object):
 		# setup private request headers if appropriate
 		if self._engine.token is not None:
 			if self._engine.name == "gitlab":
-				request.add_header('PRIVATE-TOKEN', self._engine.token)
+				request.add_header("PRIVATE-TOKEN", self._engine.token)
 			else:
 				if self._verbose: print("Tokens not setup for engine yet")
 
@@ -730,7 +730,7 @@ class Singleton_updater(object):
 			# setup private token if appropriate
 			if self._engine.token is not None:
 				if self._engine.name == "gitlab":
-					request.add_header('PRIVATE-TOKEN', self._engine.token)
+					request.add_header("PRIVATE-TOKEN", self._engine.token)
 				else:
 					if self._verbose: print("Tokens not setup for selected engine yet")
 			self.urlretrieve(urllib.request.urlopen(request, context=context), self._source_zip)
@@ -845,7 +845,7 @@ class Singleton_updater(object):
 		# Now extract directly from the first subfolder (not root)
 		# this avoids adding the first subfolder to the path length,
 		# which can be too long if the download has the SHA in the name
-		zsep = '/'  #os.sep  # might just always be / even on windows
+		zsep = "/"  #os.sep  # might just always be / even on windows
 		for name in zfile.namelist():
 			if zsep not in name:
 				continue
@@ -881,8 +881,8 @@ class Singleton_updater(object):
 			return -1
 
 		if self._subfolder_path:
-			self._subfolder_path.replace('/', os.path.sep)
-			self._subfolder_path.replace('\\', os.path.sep)
+			self._subfolder_path.replace("/", os.path.sep)
+			self._subfolder_path.replace("\\", os.path.sep)
 
 		# either directly in root of zip/one subfolder, or use specified path
 		if not isfile(join(unpath,"__init__.py")):
@@ -1073,12 +1073,12 @@ class Singleton_updater(object):
 		# should go through string and remove all non-integers,
 		# and for any given break split into a different section
 		segments = list()
-		tmp = ''
+		tmp = ""
 		for l in str(text):
 			if not l.isdigit():
 				if len(tmp) > 0:
 					segments.append(int(tmp))
-					tmp = ''
+					tmp = ""
 			else:
 				tmp += l
 		if len(tmp) > 0:
@@ -1447,7 +1447,7 @@ class Singleton_updater(object):
 			self._json["version_text"] = dict()
 
 		jpath = self.get_json_path()
-		outf = open(jpath, 'w')
+		outf = open(jpath, "w")
 		data_out = json.dumps(self._json, indent=4)
 		outf.write(data_out)
 		outf.close()
@@ -1542,7 +1542,7 @@ class BitbucketEngine(object):
 	"""Integration to Bitbucket API for git-formatted repositories"""
 
 	def __init__(self):
-		self.api_url = 'https://api.bitbucket.org'
+		self.api_url = "https://api.bitbucket.org"
 		self.token = None
 		self.name = "bitbucket"
 
@@ -1572,7 +1572,7 @@ class GithubEngine(object):
 	"""Integration to Github API"""
 
 	def __init__(self):
-		self.api_url = 'https://api.github.com'
+		self.api_url = "https://api.github.com"
 		self.token = None
 		self.name = "github"
 
@@ -1601,7 +1601,7 @@ class GitlabEngine(object):
 	"""Integration to GitLab API"""
 
 	def __init__(self):
-		self.api_url = 'https://gitlab.com'
+		self.api_url = "https://gitlab.com"
 		self.token = None
 		self.name = "gitlab"
 
@@ -1641,4 +1641,4 @@ class GitlabEngine(object):
 # should be what's imported to other files
 # -----------------------------------------------------------------------------
 
-Updater = Singleton_updater()
+Updater = SingletonUpdater()
